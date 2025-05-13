@@ -1,0 +1,196 @@
+{% load static %}
+<html>
+<head>
+    <title>Interactive Online Quiz</title>
+    <style>
+        body {
+            background-image: url("{% static 'quiz.jpeg' %}");
+            background-size: cover;
+        }
+        #header {
+            height: 100px;
+            border: 1px solid black;
+            display: flex;
+            background: rgba(255,255,255,0.5);
+        }
+        #logo {
+            height: 100px;
+            border: 1px solid black;
+            width: 10%;
+        }
+        img {
+            clip-path: circle(50%);
+        }
+        #heading {
+            height: 100px;
+            border: 1px solid black;
+            width: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #navi {
+            height: 100px;
+            border: 1px solid black;
+            width: 50%;
+            display: flex;
+            align-items: center;
+        }
+        #links {
+            height: 30px;
+            border: 1px solid white;
+            width: 100%;
+            border-radius: 15px;
+        }
+        ul {
+            margin: 5px 0px;
+        }
+        ul li {
+            display: inline-block;
+            padding: 0px 20px;
+        }
+        ul li:hover {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid black;
+            border-radius: 15px;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        #body {
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #body1 {
+            height: 500px;
+            width: 80%;
+            background: rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        #box {
+            background: rgba(0,0,0,0.5);
+            height: 300px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            align-items: center;
+            justify-content: center;
+        }
+        #btn1, #btn2 {
+            height: 30px;
+            width: 80px;
+            border-radius: 20px;
+        }
+        input {
+            height: 30px;
+            width: 170px;
+            border-radius: 20px;
+        }
+        td, th, tr {
+            color: white;
+        }
+        #footer {
+            height: 100px;
+            background: rgba(255,255,255,0.5);
+            display: flex;
+        }
+        #social {
+            height: 100px;
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        #address {
+            height: 100px;
+            width: 50%;
+        }
+        #footer img:hover {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid black;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    {% if messages %}
+        {% for message in messages %}
+            <p id="login-message" style="color: green;">{{ message }}</p>
+        {% endfor %}
+        <script>
+            setTimeout(function () {
+                window.location.href = "{% url 'quiz_page' %}";
+            }, 10000); // Redirect after 10 seconds
+        </script>
+    {% endif %}
+
+    <div id="header">
+        <div id="logo">
+            <img src="{% static 'vgs logo.jpeg' %}" height="100" width="100">
+        </div>
+        <div id="heading">
+            <h1>INTERACTIVE ONLINE QUIZ</h1>
+        </div>
+        <div id="navi">
+            <div id="links">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="S">Student</a></li>
+                    <li><a href="Q">Quiz</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="body">
+        <div id="body1">
+            <div id="box">
+                <div>
+                    <a href="S"><button id="btn1">Sign In</button></a>
+                    <a href="R"><button id="btn2">Sign Up</button></a>
+                </div>
+
+                <h2>Login</h2>
+                <form action="SA" method="POST">
+                    <h3>{{ data }}</h3>
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <th>Username</th>
+                            <td><input type="text" name="username" placeholder="Enter your username" required></td>
+                        </tr>
+                        <tr>
+                            <th>Password</th>
+                            <td><input type="password" name="password" placeholder="Enter your Password" required></td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td><input type="submit" value="Login"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div id="social">
+            <a href="https://www.facebook.com/home.php"><img src="{% static 'fb.png' %}" height="30"></a>
+            <a href="https://www.instagram.com/accounts/login/?hl=en"><img src="{% static 'insta.jpeg' %}" height="30"></a>
+            <a href="https://in.linkedin.com/"><img src="{% static 'link.png' %}" height="30"></a>
+            <a href="https://x.com/?lang=en"><img src="{% static 'twitter.png' %}" height="30"></a>
+            <a href="https://youtube.com"><img src="{% static 'youtube.png' %}" height="30"></a>
+        </div>
+        <div id="address">
+            address
+        </div>
+    </div>
+</body>
+</html>

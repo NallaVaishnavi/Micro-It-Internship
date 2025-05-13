@@ -1,0 +1,226 @@
+{% load static %}
+<html>
+<head>
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            background-image: url("{% static 'quiz.jpeg' %}");
+            background-size: cover;
+        }
+        #header {
+            height: 100px;
+            border: 1px solid black;
+            display: flex;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        #logo {
+            height: 100px;
+            border: 1px solid black;
+            width: 10%;
+        }
+        img {
+            clip-path: circle(50%);
+        }
+        #heading {
+            height: 100px;
+            border: 1px solid black;
+            width: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #navi {
+            height: 100px;
+            border: 1px solid black;
+            width: 50%;
+            display: flex;
+            align-items: center;
+        }
+        #links ul {
+            margin: 5px 0px;
+        }
+        #links ul li {
+            display: inline-block;
+            padding: 0px 20px;
+        }
+        ul li:hover {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid black;
+            border-radius: 15px;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        #body {
+            height: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        #quiz-container {
+            height: auto;
+            width: 600px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            display: none;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options input {
+            margin: 5px;
+        }
+        .user-selection button {
+            padding: 10px 15px;
+            margin: 5px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #submit-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #footer {
+            height: 100px;
+            background: rgba(255, 255, 255, 0.5);
+            display: flex;
+        }
+        .user-selection {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="logo">
+            <img src="{% static 'vgs logo.jpeg' %}" height="100" width="100">
+        </div>
+        <div id="heading">
+            <h1>Interactive Quiz</h1>
+        </div>
+        <div id="navi">
+            <div id="links">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="S">Student</a></li>
+                    <li><a href="Q">Quiz</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="body">
+        <div class="user-selection">
+            <h2>Select Your Quiz</h2>
+            <button onclick="loadQuiz('student')">Student Quiz</button>
+            <button onclick="loadQuiz('faculty')">Faculty Quiz</button>
+        </div>
+        <div id="quiz-container">
+            <h2 id="quiz-title"></h2>
+            <div class="question" id="question-text"></div>
+            <div class="options" id="options-container"></div>
+            <button id="submit-btn" onclick="submitQuiz()">Next</button>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div id="social">
+            <a href="https://www.facebook.com"><img src="{% static 'fb.png' %}" height="30"></a>
+            <a href="https://www.instagram.com"><img src="{% static 'insta.jpeg' %}" height="30"></a>
+            <a href="https://www.linkedin.com"><img src="{% static 'link.png' %}" height="30"></a>
+            <a href="https://www.twitter.com"><img src="{% static 'twitter.png' %}" height="30"></a>
+            <a href="https://www.youtube.com"><img src="{% static 'youtube.png' %}" height="30"></a>
+        </div>
+    </div>
+
+    <script>
+        const quizzes = {
+            student: {
+                title: "Student Quiz",
+                questions: [
+                    { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
+                    { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
+                    { question: "Which planet is known as the Red Planet?", options: ["Earth", "Venus", "Mars", "Jupiter"], answer: "Mars" }
+                ]
+            },
+            faculty: {
+                title: "Faculty Quiz",
+                questions: [
+                    { question: "Who proposed the theory of relativity?", options: ["Newton", "Einstein", "Galileo", "Tesla"], answer: "Einstein" },
+                    { question: "What is the chemical symbol for water?", options: ["H2O", "O2", "CO2", "NaCl"], answer: "H2O" },
+                    { question: "Which element has the atomic number 1?", options: ["Oxygen", "Hydrogen", "Nitrogen", "Carbon"], answer: "Hydrogen" }
+                ]
+            }
+        };
+
+        let currentQuiz = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuiz(type) {
+            currentQuiz = quizzes[type].questions;
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById("quiz-title").innerText = quizzes[type].title;
+            document.getElementById("quiz-container").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex < currentQuiz.length) {
+                const questionData = currentQuiz[currentQuestionIndex];
+                document.getElementById("question-text").innerText = questionData.question;
+                const optionsContainer = document.getElementById("options-container");
+                optionsContainer.innerHTML = "";
+
+                questionData.options.forEach(option => {
+                    const radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.name = "quiz-option";
+                    radio.value = option;
+
+                    const label = document.createElement("label");
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(option));
+
+                    optionsContainer.appendChild(label);
+                    optionsContainer.appendChild(document.createElement("br"));
+                });
+            } else {
+                showResult();
+            }
+        }
+
+        function submitQuiz() {
+            const selectedOption = document.querySelector('input[name="quiz-option"]:checked');
+            if (!selectedOption) {
+                alert("Please select an answer");
+                return;
+            }
+
+            if (selectedOption.value === currentQuiz[currentQuestionIndex].answer) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            document.getElementById("quiz-container").innerHTML = `<h2>Quiz Completed!</h2><p>Your Score: ${score}/${currentQuiz.length}</p>`;
+        }
+    </script>
+</body>
+</html>
+
